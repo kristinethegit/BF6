@@ -28,11 +28,15 @@ ui <- fluidPage(
         # Show a plot of the generated distribution
         mainPanel(
           tabsetPanel(
-            tabPanel("Plot", plotOutput("plot"), 
+            tabPanel("Overview", plotOutput("plot"), 
                      tabPanelBody("panel2", "Panel 2 content")),
             tabPanel("Table", tableOutput("table"), 
                      tabPanelBody("panel3", "Panel 3 content")),
-            tabPanel("About", plotOutput("about"), 
+            tabPanel("Page", plotOutput("plot"),
+                     tabPanelBody("panel4", "Panel 4 conent")),
+            tabPanel("Page", plotOutput("plot"),
+                     tabPanelBody("panel5", "Panel 5 conent")),
+            tabPanel("Conclusion", textOutput("Conclusion"), 
                      tabPanelBody("panel1", "Panel 1 content"))
           )
         )
