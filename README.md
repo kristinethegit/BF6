@@ -1,2 +1,3 @@
-# BF6
-## Oregon Wildfires
+# Oregon Wildfires
+## Group BF
+**Final project**
