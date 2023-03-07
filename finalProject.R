@@ -3,12 +3,15 @@ library(tidyverse)
 library(ggplot2)
 
 # create sample data
-causes <- c("Lightning", "Human Activity")
-counts <- c(500, 250)
+causes_data <- data.frame(
+  year = c(rep(2000:2022, 2)),
+  cause = c(rep("Lightning", 23), rep("Human Activity", 23)),
+  count = c(sample(100:1000, 23), sample(50:500, 23))
+)
 
 ui <- fluidPage(
   
-  #Title   
+  # Title   
   titlePanel("Wildfires in Oregon"),
   
   # Tabs
@@ -30,6 +33,10 @@ ui <- fluidPage(
     # Causes of wildfires tab
     tabPanel("Causes of wildfires in Oregon",
              sidebarPanel(
+               # Sidebar content for Causes of wildfires tab
+               h3("Select years to compare:"),
+               sliderInput("year_range", "Year Range", min = 2000, max = 2022, value = c(2015, 2022), step = 1),
+               actionButton("update_btn", "Update")
              ),
              mainPanel(
                plotOutput("causes_plot")
@@ -61,13 +68,16 @@ server <- function(input, output){
     list(src = "image.jpeg", width = "600", height = "300")
   })
   
-  # Causes of wildfires plot (Kristine Chang)
+  # Causes of wildfires plot
   output$causes_plot <- renderPlot({
-    ggplot(data = data.frame(causes, counts), aes(x = causes, y = counts, fill = causes)) + 
-      geom_bar(stat = "identity") +
+    filtered_data <- causes_data %>% 
+      filter(year >= input$year_range[1] & year <= input$year_range[2])
+    ggplot(data = filtered_data, aes(x = year, y = count, fill = cause)) + 
+      geom_bar(stat = "identity", position = "dodge") +
       labs(title = "Causes of wildfires in Oregon",
-           x = "Cause",
-           y = "Number of wildfires")
+           x = "Year",
+           y = "Number of wildfires") +
+      scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
   })
   
 }
