@@ -22,17 +22,19 @@ ui <- fluidPage(
   #Title   
   titlePanel("Wildfires in Oregon"),
   
-  # tabs
+  # Tabs
   tabsetPanel(
-    #project overview tab
-    tabPanel("Overview",
+    # Introduction tab with short information about the purpose of this app and dataset
+    tabPanel("Introduction",
              mainPanel(
+               imageOutput("Image"),
             h2(strong("Project Overview")),
             p("This report will provide a broad summary of wildfires in the state of Oregon and its causes."),
             h2(strong("Data Set")),
             p("This app uses wild fire data from DATA.GOV. The data set from the Oregon Department of Forestry (ODF) and it spans from 2000 through 2022."),
             a("Access link here", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
-            
+            h2(strong("Audience")),
+            p(""),
              )
     ),
     #causes of wildfires tab
@@ -66,6 +68,12 @@ ui <- fluidPage(
 )
 #server
 server <- function(input, output){
+  
+  #image for the first page
+  output$Image <- renderImage({
+    list(src = "image .jpeg", width = "600", height = "300")
+  })
+  
   
   
 }
