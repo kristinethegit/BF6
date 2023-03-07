@@ -61,7 +61,7 @@ server <- function(input, output){
     list(src = "image.jpeg", width = "600", height = "300")
   })
   
-  # Causes of wildfires plot
+  # Causes of wildfires plot (Kristine Chang)
   output$causes_plot <- renderPlot({
     ggplot(data = data.frame(causes, counts), aes(x = causes, y = counts, fill = causes)) + 
       geom_bar(stat = "identity") +
