@@ -26,7 +26,7 @@ ui <- fluidPage(
                p("This app uses wild fire data from DATA.GOV. The data set from the Oregon Department of Forestry (ODF) and it spans from 2000 through 2022."),
                a("Access link here", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
                h2(strong("Audience")),
-               p("")
+               p("This dataframe portrays the number of Oregon wildfires over the years. This will help the state government organize and put the wildfires under control now knowing the cause and location.")
              )
     ),
     
@@ -65,7 +65,7 @@ server <- function(input, output){
   
   # Image for the first page
   output$Image <- renderImage({
-    list(src = "image.jpeg", width = "600", height = "300")
+    list(src = "image .jpeg", width = "600", height = "300")
   })
   
   # Causes of wildfires plot
