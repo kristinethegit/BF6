@@ -1,22 +1,11 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 library(tidyverse)
+library(ggplot2)
 
-#loading data
+# create sample data
+causes <- c("Lightning", "Human Activity")
+counts <- c(500, 250)
 
-#OregonFires <- read.delim()
-  
-
-  
-  
 ui <- fluidPage(
   
   #Title   
@@ -28,55 +17,60 @@ ui <- fluidPage(
     tabPanel("Introduction",
              mainPanel(
                imageOutput("Image"),
-            h2(strong("Project Overview")),
-            p("This report will provide a broad summary of wildfires in the state of Oregon and its causes."),
-            h2(strong("Data Set")),
-            p("This app uses wild fire data from DATA.GOV. The data set from the Oregon Department of Forestry (ODF) and it spans from 2000 through 2022."),
-            a("Access link here", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
-            h2(strong("Audience")),
-            p(""),
+               h2(strong("Project Overview")),
+               p("This report will provide a broad summary of wildfires in the state of Oregon and its causes."),
+               h2(strong("Data Set")),
+               p("This app uses wild fire data from DATA.GOV. The data set from the Oregon Department of Forestry (ODF) and it spans from 2000 through 2022."),
+               a("Access link here", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
+               h2(strong("Audience")),
+               p("")
              )
     ),
-    #causes of wildfires tab (Kristine)
+    
+    # Causes of wildfires tab
     tabPanel("Causes of wildfires in Oregon",
              sidebarPanel(
-               # Sidebar content for Tab 2
              ),
              mainPanel(
-               # Main content for Tab 2
+               plotOutput("causes_plot")
              )
     ),
-    #human fires tab
+    
+    # Human fires tab
     tabPanel("How frequent are human induced fires?",
-              sidebarPanel(
-                # Sidebar content for Tab 3
+             sidebarPanel(
              ),
-               mainPanel(
-                   # Main content for Tab 3
+             mainPanel(
              )
-  ),
-  #early vs later fires
-  tabPanel("How have wildfires in earlier years differed from later years?",
-           sidebarPanel(
-             # Sidebar content for Tab 3
-           ),
-           mainPanel(
-             # Main content for Tab 3
-          )
+    ),
+    
+    # Early vs later fires tab
+    tabPanel("How have wildfires in earlier years differed from later years?",
+             sidebarPanel(
+             ),
+             mainPanel(
+             )
+    )
+  )
 )
-)
-)
-#server
+
 server <- function(input, output){
   
-  #image for the first page
+  # Image for the first page
   output$Image <- renderImage({
-    list(src = "image .jpeg", width = "600", height = "300")
+    list(src = "image.jpeg", width = "600", height = "300")
   })
   
-  
+  # Causes of wildfires plot
+  output$causes_plot <- renderPlot({
+    ggplot(data = data.frame(causes, counts), aes(x = causes, y = counts, fill = causes)) + 
+      geom_bar(stat = "identity") +
+      labs(title = "Causes of wildfires in Oregon",
+           x = "Cause",
+           y = "Number of wildfires")
+  })
   
 }
 
-
 shinyApp(ui = ui, server = server)
+
