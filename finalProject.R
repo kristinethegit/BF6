@@ -37,7 +37,7 @@ ui <- fluidPage(
             p(""),
              )
     ),
-    #causes of wildfires tab
+    #causes of wildfires tab (Kristine)
     tabPanel("Causes of wildfires in Oregon",
              sidebarPanel(
                # Sidebar content for Tab 2
