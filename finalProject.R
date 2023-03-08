@@ -73,57 +73,110 @@ ui <- fluidPage(
     ),
     
     # Human fires tab
-    tabPanel("How frequent are human induced fires?",
-             sidebarPanel(
+    tabPanel("Oregon Fires",
+             sidebarLayout(
+               sidebarPanel(
+                 sliderInput(
+                   "acres",
+                   "Select a range of estimated total acres burned:",
+                   min = 0,
+                   max = max(OregonFires$EstTotalAcres, na.rm = TRUE),
+                   value = c(0, max(OregonFires$EstTotalAcres, na.rm = TRUE)),
+                   sep = "",
+                   pre = "Acres: "
+                 ),
+                 checkboxGroupInput(
+                   "districts",
+                   "Select districts:",
+                   choices = unique(OregonFires$DistrictName),
+                   selected = unique(OregonFires$DistrictName)
+                 )
+               ),
+               mainPanel(
+                 plotOutput("scatterplot")
+               )
+             )),
+             
+             # Early vs later fires tab
+             tabPanel("How have wildfires in earlier years differed from later years?",
+                      sidebarPanel(
+                        # Add content here if desired
+                      ),
+                      mainPanel(
+                        # Add content here if desired
+                      )
              ),
-             mainPanel(
+            
+      tabPanel("Conclusion",
+                      mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
+                                imageOutput("Image2")
+                      )
              )
-    ),
+))
+  
+  
+  # Server
+  server <- function(input, output){
     
-    # Early vs later fires tab
-    tabPanel("How have wildfires in earlier years differed from later years?",
-             sidebarPanel(
-             ),
-             mainPanel(
-             )
-    ),
-    tabPanel("Conclusion",
-             mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
-                       imageOutput("Image2")
-             )
+    # Image for the first page
+    output$Image <- renderImage({
+      list(src = "image .jpeg", width = "600", height = "300")
+    })
+    
+    # Causes of wildfires plot
+    causes_data <- data.frame(
+      year = 2010:2020,
+      cause = c("Human", "Lightning"),
+      count = c(546, 1171)
     )
-  )
-)
-
-
-server <- function(input, output){
-  
-  # Image for the first page
-  output$Image <- renderImage({
-    list(src = "image .jpeg", width = "600", height = "300")
+    
+    causes_plot_data <- reactive({
+      filtered_data <- causes_data %>% 
+        filter(year >= input$year_range[1] & year <= input$year_range[2])
+      ggplot(data = filtered_data, aes(x = year, y = count, fill = cause)) + 
+        geom_bar(stat = "identity", position = "dodge") +
+        labs(title = "Causes of wildfires in Oregon",
+             x = "Year",
+             y = "Number of wildfires") +
+        scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
+    })
+    
+    output$causes_plot <- renderPlot({
+      causes_plot_data()
+    })
+    
+    
+    # Image 2 for the conclusion page
+    output$Image2 <- renderImage({
+      list(src = "image2 .jpg", width = "600", height = "300")
+    })
+    
+    output$scatterplot <- renderPlot({
+      
+      # Filter the data based on the selected estimated total acres burned and districts
+      filter_data <- OregonFires %>%
+        filter(
+          EstTotalAcres >= input$acres[1] & EstTotalAcres <= input$acres[2],
+          DistrictName %in% input$districts
+      )
+    
+    # Group the data by EstTotalAcres, FireYear, and DistrictName, and count the number of rows in each group
+    grouped_data <- filter_data %>%
+      group_by(EstTotalAcres, FireYear, DistrictName) %>%
+      summarise(count = n())
+    
+    # Create the scatterplot
+    ggplot(
+      data = grouped_data,
+      aes(x = EstTotalAcres, y = count, color = DistrictName, group = FireYear)
+    ) +
+      geom_point() +
+      labs(x = "Amount of Fires", y = "Total Acres", color = "Fire Year") +
+      scale_color_discrete(name = "District") +
+      guides(color = guide_legend(ncol = 1)) +
+      theme(legend.position = "right")
   })
   
-  # Causes of wildfires plot
-  causes_plot_data <- reactive({
-    filtered_data <- causes_data %>% 
-      filter(year >= input$year_range[1] & year <= input$year_range[2])
-    ggplot(data = filtered_data, aes(x = year, y = count, fill = cause)) + 
-      geom_bar(stat = "identity", position = "dodge") +
-      labs(title = "Causes of wildfires in Oregon",
-           x = "Year",
-           y = "Number of wildfires") +
-      scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
-  })
-  
-  output$causes_plot <- renderPlot({
-    causes_plot_data()
-  })
-  
-
-  # Image 2 for the conclusion page
-  output$Image2 <- renderImage({
-    list(src = "image2 .jpg", width = "600", height = "300")
-  })
 }
 
 shinyApp(ui = ui, server = server)
