@@ -57,7 +57,12 @@ ui <- fluidPage(
              ),
              mainPanel(
              )
-    )
+    ),
+    tabPanel("Conclusion",
+             sidebarPanel(
+             ),
+             mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes."
+             ))
   )
 )
 
@@ -80,6 +85,10 @@ server <- function(input, output){
       scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
   })
   
+  # Image 2 for the conclusion page
+  output$Image2 <- renderImage({
+    list(src = "image2 .jpg", width = "600", height = "300")
+  })
 }
 
 shinyApp(ui = ui, server = server)
