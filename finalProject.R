@@ -116,6 +116,8 @@ ui <- fluidPage(
     
     tabPanel("Conclusion",
              mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
+                       "• Earlier years (200-2010) of the Oregon wildfires had a significant amount being 2006 with 1300 occurances of fires,
+                       however, after a steep dip, the wild fires shot back up again in the later years (2011-2022).",
                        imageOutput("Image2")
              )
     )
