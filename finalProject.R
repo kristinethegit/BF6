@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(ggplot2)
+OregonFires <- read_delim("ODF_Fire_Occurrence_Data.csv")
 
 # create sample data
 causes_data <- data.frame(
@@ -59,10 +60,10 @@ ui <- fluidPage(
              )
     ),
     tabPanel("Conclusion",
-             sidebarPanel(
-             ),
-             mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes."
-             ))
+             mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
+               imageOutput("Image2")
+             )
+    )
   )
 )
 
