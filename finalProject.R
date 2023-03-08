@@ -4,12 +4,7 @@ library(tidyverse)
 library(ggplot2)
 OregonFires <- read_delim("ODF_Fire_Occurrence_Data.csv")
 
-# create sample data
-causes_data <- data.frame(
-  year = c(rep(2000:2022, 2)),
-  cause = c(rep("Lightning", 23), rep("Human Activity", 23)),
-  count = c(sample(100:1000, 23), sample(50:500, 23))
-)
+
 #wildfires per year for line plot
 fire_counts <- OregonFires%>% 
   group_by(FireYear) %>% 
