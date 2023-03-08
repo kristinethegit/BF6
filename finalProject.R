@@ -1,3 +1,4 @@
+
 library(shiny)
 library(tidyverse)
 library(ggplot2)
@@ -9,6 +10,10 @@ causes_data <- data.frame(
   cause = c(rep("Lightning", 23), rep("Human Activity", 23)),
   count = c(sample(100:1000, 23), sample(50:500, 23))
 )
+#wildfires per year for line plot
+fire_counts <- OregonFires%>% 
+  group_by(FireYear) %>% 
+  summarise(FIRE_COUNT = n())
 
 ui <- fluidPage(
   
@@ -56,7 +61,7 @@ ui <- fluidPage(
                p("• Simran Bhatti"),
                p("• Bella Kwon"),
                p("• Leire Gangoiti")
-              
+               
              )
     ),
     
@@ -96,68 +101,88 @@ ui <- fluidPage(
                  plotOutput("scatterplot")
                )
              )),
-             
-             # Early vs later fires tab
-             tabPanel("How have wildfires in earlier years differed from later years?",
-                      sidebarPanel(
-                        # Add content here if desired
-                      ),
-                      mainPanel(
-                        # Add content here if desired
-                      )
+    
+    # Early vs later fires tab
+    tabPanel("How have wildfires in earlier years differed from later years?",
+             sidebarPanel(h3("Earlier Years vs. Later Years:"),
+                          #radio buttons
+                          radioButtons("earlylater", "Select Early Years or Later Years",
+                                       choices = c( "Early Years", "Later Years"),
+                                       selected = "Early Years")
              ),
-            
-      tabPanel("Conclusion",
-                      mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
-                                imageOutput("Image2")
-                      )
+             mainPanel(plotOutput("line_plot")
+             )  
+    ), 
+    
+    tabPanel("Conclusion",
+             mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
+                       imageOutput("Image2")
              )
-))
-  
-  
-  # Server
-  server <- function(input, output){
-    
-    # Image for the first page
-    output$Image <- renderImage({
-      list(src = "image .jpeg", width = "600", height = "300")
-    })
-    
-    # Causes of wildfires plot
-    causes_data <- data.frame(
-      year = 2010:2020,
-      cause = c("Human", "Lightning"),
-      count = c(546, 1171)
     )
+  ))
+
+
+# Server
+server <- function(input, output){
+  
+  # Image for the first page
+  output$Image <- renderImage({
+    list(src = "image .jpeg", width = "600", height = "300")
+  })
+  
+  # Causes of wildfires plot
+  causes_data <- data.frame(
+    year = 2010:2020,
+    cause = c("Human", "Lightning"),
+    count = c(546, 1171)
+  )
+  
+  causes_plot_data <- reactive({
+    filtered_data <- causes_data %>% 
+      filter(year >= input$year_range[1] & year <= input$year_range[2])
+    ggplot(data = filtered_data, aes(x = year, y = count, fill = cause)) + 
+      geom_bar(stat = "identity", position = "dodge") +
+      labs(title = "Causes of wildfires in Oregon",
+           x = "Year",
+           y = "Number of wildfires") +
+      scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
+  })
+  
+  output$causes_plot <- renderPlot({
+    causes_plot_data()
+  })
+  
+  # Create a reactive filter based on the user's radio button selection for line plot
+  EarlyvsLater <- reactive({
+    if (input$earlylater == "Early Years") {
+      filter(fire_counts, FireYear >= 2000 & FireYear <= 2010)
+    } else {
+      filter(fire_counts, FireYear >= 2011 & FireYear <= 2022)
+    }
+  })
+  #output for line plot
+  output$line_plot <- renderPlot({
+    ggplot(EarlyvsLater(), aes(x = FireYear, y = FIRE_COUNT)) + 
+      geom_line() +
+      xlab("Year") +
+      ylab("Number of Fires") +
+      ggtitle("Fire Occurrence Data") +
+      scale_x_continuous(breaks = seq(2000, 2022)) 
     
-    causes_plot_data <- reactive({
-      filtered_data <- causes_data %>% 
-        filter(year >= input$year_range[1] & year <= input$year_range[2])
-      ggplot(data = filtered_data, aes(x = year, y = count, fill = cause)) + 
-        geom_bar(stat = "identity", position = "dodge") +
-        labs(title = "Causes of wildfires in Oregon",
-             x = "Year",
-             y = "Number of wildfires") +
-        scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
-    })
+  })
+  
+  # Image 2 for the conclusion page
+  output$Image2 <- renderImage({
+    list(src = "image2 .jpg", width = "600", height = "300")
+  })
+  
+  output$scatterplot <- renderPlot({
     
-    output$causes_plot <- renderPlot({
-      causes_plot_data()
-    })
-    
-    
-    # Image 2 for the conclusion page
-    output$Image2 <- renderImage({
-      list(src = "image2 .jpg", width = "600", height = "300")
-    })
-    
-    output$scatterplot <- renderPlot({
-      
-      # Filter the data based on the selected estimated total acres burned and districts
-      filter_data <- OregonFires %>%
-        filter(
-          EstTotalAcres >= input$acres[1] & EstTotalAcres <= input$acres[2],
-          DistrictName %in% input$districts
+    # Filter the data based on the selected estimated total acres burned and districts
+    filter_data <- OregonFires %>%
+      filter(
+        EstTotalAcres >= input$acres[1] & EstTotalAcres <= input$acres[2],
+        DistrictName %in% input$districts
       )
     
     # Group the data by EstTotalAcres, FireYear, and DistrictName, and count the number of rows in each group
