@@ -12,7 +12,7 @@ causes_data <- data.frame(
 
 ui <- fluidPage(
   
-  # Title   
+  #Title   
   titlePanel("Wildfires in Oregon"),
   
   # Tabs
@@ -20,14 +20,44 @@ ui <- fluidPage(
     # Introduction tab with short information about the purpose of this app and dataset
     tabPanel("Introduction",
              mainPanel(
+               #Add image to the intro page 
                imageOutput("Image"),
+               #Add description to the intro page
                h2(strong("Project Overview")),
-               p("This report will provide a broad summary of wildfires in the state of Oregon and its causes."),
-               h2(strong("Data Set")),
-               p("This app uses wild fire data from DATA.GOV. The data set from the Oregon Department of Forestry (ODF) and it spans from 2000 through 2022."),
-               a("Access link here", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
-               h2(strong("Audience")),
-               p("This dataframe portrays the number of Oregon wildfires over the years. This will help the state government organize and put the wildfires under control now knowing the cause and location.")
+               p("Wildfires have so much impact on our human lives that why people can describe its 
+               as one big national disaster. These wildfires take away many people's homes and lives in
+               an instant, but just one case allows data analysts to gather a lot of information about.  
+               Data obtained through a wildfire can predict and prepare various information such as the direction, 
+               location, and reason of the fire in the future. We're going to use data on wildfires in Oregon among 
+              many states of the United States. In addition, we will explain why forest fires occur mainly and analyze 
+                 how  people affect wildfires."),
+               h3(strong("Audience")),
+               p("We consider anyone in general who is interested in the wildfire. 
+                 However, our main target audience would be the people who live in Oregon firefighter departments 
+                 both national and Oregon, scientists, researchers and land managers.
+                 The scholar field can study and predict by using the data of wildfire in diverse aspects."),
+               h3(strong("Data Set")),
+               p("We will be working with the wildfires in Oregon dataset made by Oregon Department of Forestry (ODF)
+                 at the government website(DATA.GOV.) This dataset includes data from 2000 to 2022 and records 23491 
+                 cases of wildfired. As one case of  wildfire is happen in, there is a lot of information that can be
+                 recorded such as where it occurred; DistrictName, which unit it was; UnitName, how size of it; Size_class, 
+                 location and time data, and etc. These dataset can be used in various fields and aspects as well as simply 
+                 answering the questions that we are currently focusing on for our target customer. 
+                 There are many information variables to record based on the different cases of wildfires in Oregon; 
+                 however, We narrowed down the datasat and only utilized the following cariabels: Fire Year, CauseBy, and HumanOrLightning."),
+               a("Access the Dataset what we used", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
+               h3(strong("Questions")),
+               p("Some questions we focused on are : "),
+               p("• What are the causes of wildfires  on the West Coast?"),
+               p("• How frequently are fires started by humans?"),
+               p("• How have wildfires in earlier years differed from later years?"),
+               h3(strong("Creators")),
+               p("• Kristine Chang"),
+               p("• Simran Bhatti"),
+               p("• Bella Kwon"),
+               p("• Leire Gangoiti")
+               
+               
              )
     ),
     
