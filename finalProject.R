@@ -227,7 +227,7 @@ server <- function(input, output){
       aes(x = EstTotalAcres, y = count, color = DistrictName, group = FireYear)
     ) +
       geom_point() +
-      labs(x = "Amount of Fires", y = "Total Acres", color = "Fire Year") +
+      labs(x = "Total Acres", y = "Total Acres Burned", color = "Fire Year") +
       scale_color_discrete(name = "District") +
       guides(color = guide_legend(ncol = 1)) +
       theme(legend.position = "right")
