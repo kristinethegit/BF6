@@ -4,6 +4,12 @@ library(tidyverse)
 library(ggplot2)
 OregonFires <- read_delim("ODF_Fire_Occurrence_Data.csv")
 
+# create sample data
+causes_data <- data.frame(
+  year = c(rep(2000:2022, 2)),
+  cause = c(rep("Lightning", 23), rep("Human Activity", 23)),
+  count = c(sample(100:1000, 23), sample(50:500, 23))
+)
 
 #wildfires per year for line plot
 fire_counts <- OregonFires%>% 
@@ -24,27 +30,24 @@ ui <- fluidPage(
                imageOutput("Image"),
                #Add description to the intro page
                h2(strong("Project Overview")),
-               p("Wildfires have so much impact on our human lives that why people can describe its 
+               p("Wildfires have so much impact on our lives that people describe it 
                as one big national disaster. These wildfires take away many people's homes and lives in
-               an instant, but just one case allows data analysts to gather a lot of information about.  
+               an instant, but just one case allows data analysts to gather a lot of information on a national level.  
                Data obtained through a wildfire can predict and prepare various information such as the direction, 
-               location, and reason of the fire in the future. We're going to use data on wildfires in Oregon among 
-              many states of the United States. In addition, we will explain why forest fires occur mainly and analyze 
-                 how  people affect wildfires."),
+               location, and reason of the fire in the future. We're going to use data on wildfires in Oregon to estimate a trend among 
+              other states of the United States. In addition, we will explain why forest fires occur and analyze 
+                 how  people get affected by wildfires."),
                h3(strong("Audience")),
-               p("We consider anyone in general who is interested in the wildfire. 
-                 However, our main target audience would be the people who live in Oregon firefighter departments 
-                 both national and Oregon, scientists, researchers and land managers.
+               p("We consider anyone in general who is interested in the Oregon wildfires. 
+                 However, our main target audience would be the people who live in Oregon, as well as firefighters, scientists, researchers, and land managers.
                  The scholar field can study and predict by using the data of wildfire in diverse aspects."),
                h3(strong("Data Set")),
                p("We will be working with the wildfires in Oregon dataset made by Oregon Department of Forestry (ODF)
-                 at the government website(DATA.GOV.) This dataset includes data from 2000 to 2022 and records 23491 
-                 cases of wildfired. As one case of  wildfire is happen in, there is a lot of information that can be
-                 recorded such as where it occurred; DistrictName, which unit it was; UnitName, how size of it; Size_class, 
-                 location and time data, and etc. These dataset can be used in various fields and aspects as well as simply 
-                 answering the questions that we are currently focusing on for our target customer. 
+                 at the government website (DATA.GOV.) This dataset includes data from 2000 to 2022 and records 23491 
+                 cases of wildfires. In the case of a single wildfire, scientists can source the location, DistrictName, which unit it was; UnitName, how size of it; Size_class,  and time data, and etc. 
+                 This dataset can be used in various fields and aspects, and it can simply act as an answer to our question.
                  There are many information variables to record based on the different cases of wildfires in Oregon; 
-                 however, We narrowed down the datasat and only utilized the following cariabels: Fire Year, CauseBy, and HumanOrLightning."),
+                 however, we narrowed down the datasat and only utilized the following: Fire Year, CauseBy, and HumanOrLightning."),
                a("Access the Dataset what we used", href='https://catalog.data.gov/dataset/odf-fire-occurrence-data-2000-2022'),
                h3(strong("Questions")),
                p("Some questions we focused on are : "),
@@ -71,6 +74,8 @@ ui <- fluidPage(
                plotOutput("causes_plot")
              )
     ),
+    
+    
     
     # Human fires tab
     tabPanel("Oregon Fires",
@@ -107,9 +112,9 @@ ui <- fluidPage(
              ),
              mainPanel(plotOutput("line_plot")
              )  
-    ), 
+    ),
     
-   tabPanel("Conclusion",
+    tabPanel("Conclusion",
              mainPanel(
                imageOutput("Image2"),
                h2(strong("Discoveries")),
@@ -128,7 +133,7 @@ ui <- fluidPage(
                  it doesn't show exactly relationship between the amount of fires and total acres. By the way, 
                  we're going to approximately both South Cascade and Southwest Oregon districts are the most burned 
                  by the Wildfire."),
-              p("For the last plot, we selected the variables ; the number of wildfires and years 
+               p("For the last plot, we selected the variables ; the number of wildfires and years 
                  to forecast the overall trend over the decade. We set 2000 year to 2010 year as the
                  early year(s) and then to 2022 year as the later year(s). Although there are potential
                  content to lead data bias in decade such as climate change or social growth, the dataset 
@@ -167,9 +172,8 @@ ui <- fluidPage(
                  on how to deal with wildfires. Although the predicted wildfires' cycle is to surge and decrease
                  repeatedly every five-year, the state governor should prepare the recovery costs to the victims
                  for financial problems caused by wildfires."),
-            
+               
              )
-          
     )
   ))
 
@@ -181,13 +185,6 @@ server <- function(input, output){
   output$Image <- renderImage({
     list(src = "image .jpeg", width = "600", height = "300")
   })
-  
-  # Causes of wildfires plot
-  causes_data <- data.frame(
-    year = 2010:2020,
-    cause = c("Human", "Lightning"),
-    count = c(546, 1171)
-  )
   
   causes_plot_data <- reactive({
     filtered_data <- causes_data %>% 
@@ -204,24 +201,6 @@ server <- function(input, output){
     causes_plot_data()
   })
   
-  # Create a reactive filter based on the user's radio button selection for line plot
-  EarlyvsLater <- reactive({
-    if (input$earlylater == "Early Years") {
-      filter(fire_counts, FireYear >= 2000 & FireYear <= 2010)
-    } else {
-      filter(fire_counts, FireYear >= 2011 & FireYear <= 2022)
-    }
-  })
-  #output for line plot
-  output$line_plot <- renderPlot({
-    ggplot(EarlyvsLater(), aes(x = FireYear, y = FIRE_COUNT)) + 
-      geom_line() +
-      xlab("Year") +
-      ylab("Number of Fires") +
-      ggtitle("Fire Occurrence Data") +
-      scale_x_continuous(breaks = seq(2000, 2022)) 
-    
-  })
   
   # Image 2 for the conclusion page
   output$Image2 <- renderImage({
@@ -253,8 +232,23 @@ server <- function(input, output){
       guides(color = guide_legend(ncol = 1)) +
       theme(legend.position = "right")
   })
+  EarlyvsLater <- reactive({
+    if (input$earlylater == "Early Years") {
+      filter(fire_counts, FireYear >= 2000 & FireYear <= 2010)
+    } else {
+      filter(fire_counts, FireYear >= 2011 & FireYear <= 2022)
+    }
+  })
+  #output for line plot
+  output$line_plot <- renderPlot({
+    ggplot(EarlyvsLater(), aes(x = FireYear, y = FIRE_COUNT)) + 
+      geom_line() +
+      xlab("Year") +
+      ylab("Number of Fires") +
+      ggtitle("Fire Occurrence Data") +
+      scale_x_continuous(breaks = seq(2000, 2022)) 
+  })
   
 }
 
 shinyApp(ui = ui, server = server)
-
