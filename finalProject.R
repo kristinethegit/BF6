@@ -128,8 +128,9 @@ ui <- fluidPage(
                  wildfires in each year."),
                p("By using the Scatterplot, we are trying to show how much total Acres was burned by wildfires 
                  in Oregon by districts of Oregon. But if you look at the plot, most of the dots are located 
-                 close to zero. This means a very small value. The reason is that the total case in dataset is
-                 approximately 23491 such a lots. So the total acre's value becomes smaller; therefore; 
+                 close to zero. It is because the outliers are shaping the graph in a way that, because most acres 
+                 burnt values are close to 0 (like 0.01) and the dataset is huge, making the dots group in an L shape. 
+                 So the total acre's value becomes smaller; therefore; 
                  it doesn't show exactly relationship between the amount of fires and total acres. By the way, 
                  we're going to approximately both South Cascade and Southwest Oregon districts are the most burned 
                  by the Wildfire."),
@@ -227,7 +228,7 @@ server <- function(input, output){
       aes(x = EstTotalAcres, y = count, color = DistrictName, group = FireYear)
     ) +
       geom_point() +
-      labs(x = "Total Acres", y = "Total Acres Burned", color = "Fire Year") +
+      labs(x = "Total Acres Burned", y = "Total Amount of Fires", color = "Fire Year") +
       scale_color_discrete(name = "District") +
       guides(color = guide_legend(ncol = 1)) +
       theme(legend.position = "right")
