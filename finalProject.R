@@ -109,13 +109,66 @@ ui <- fluidPage(
              )  
     ), 
     
-       tabPanel("Conclusion",
+    tabPanel("Conclusion",
              mainPanel(
-               p("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes."),
-                p("• Earlier years (200-2010) of the Oregon wildfires had a significant amount being 2006 with 1300 occurances of fires,
-                       however, after a steep dip, the wild fires shot back up again in the later years (2011-2022)"),
-                       imageOutput("Image2")
+               h2(strong("Discoveries")),
+               p("Based on the plots and tables that we have computed, 
+               we can conclude that there is some correlation about wildfires in Oregon."),
+               
+               h3(strong("Data Quality")),
+               p("In general, looking at the overall trend of the histograms in both causes of Wildfires
+                 in Oregon which are the Human Activity and Lightning during the selected year(s) ;2015 to 2022
+                 . These bars can appear in the trades more instantly which is more effective for the number of
+                 wildfires in each year."),
+               p("By using the Scatterplot, we are trying to show how much total Acres was burned by wildfires 
+                 in Oregon by districts of Oregon. But if you look at the plot, most of the dots are located 
+                 close to zero. This means a very small value. The reason is that the total case in dataset is
+                 approximately 23491 such a lots. So the total acre's value becomes smaller; therefore; 
+                 it doesn't show exactly relationship between the amount of fires and total acres. By the way, 
+                 we're going to approximately both South Cascade and Southwest Oregon districts are the most burned 
+                 by the Wildfire."),
+               p("For the last plot, we selected the variables ; the number of wildfires and years 
+                 to forecast the overall trend over the decade. We set 2000 year to 2010 year as the
+                 early year(s) and then to 2022 year as the later year(s). Although there are potential
+                 content to lead data bias in decade such as climate change or social growth, the dataset 
+                 don't consider that aspect. So, it could a few aspects of data bias. "),
+               
+               
+               h3(strong("Answering these questions and trend ")),
+               p("• What are the causes of wildfires on the West Coast? "),
+               p("• How frequently are fires started by humans? :"),
+               p("Based on a dataset from 2015 to 2022, We can look for 
+               that lightning is the main cause of wildfires in Oregon rather than
+               human activities between these histograms. Due to human activities, 2018 
+               is the most likely year to occur Wildfires in Oregon. Since then, the overall 
+               trend has been gradually decreasing. However, we can still predict that at least
+               100 wildfires are caused by human activities every year."),
+               p("• How have wildfires in earlier years differed from later years? :"),
+               p("Comparing the two line graphs, the overall number of wildfires has increased
+                 in the later years compared to the early years. However, it is difficult to judge 
+                 the stable increase or decrease correlation over years because there are no any 
+                 obvious pattern. However, we can predict that the number of wildfires is rapidly
+                 increasing and decreasing every five years."),
+               
+               h3(strong("Future Ideas ")),
+               p("As the number of Wildfires due to the influence of lightning continues to increase,
+                 we should think the Oregon state's  government and fire department should consider
+                 ways to prevent forest fires from lightning. Compared to lightning, there are 
+                 significantly fewer cases caused by human activities, and overall, that case number
+                 is also decreasing. This shows that the marketings or campaigns of Wildfires 
+                 prevention in Oregon strengthened citizenship and made them more conscious of
+                 Wildfires."),
+               p("In Oregon, South Cascade and Southwest Oregon are mainly areas where most wildfires occur.
+                 Therefore, authorities need to keep a close eye on their fire department and more support 
+                 from them to deal and care for fires quickly."),
+               p("In addition, the overall number of wildfires has increased in recent years compared to the
+                 last few years. Oregon State should continue to provide early education to their citizens 
+                 on how to deal with wildfires. Although the predicted wildfires' cycle is to surge and decrease
+                 repeatedly every five-year, the state governor should prepare the recovery costs to the victims
+                 for financial problems caused by wildfires."),
+            
              )
+          
     )
   ))
 
