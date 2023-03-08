@@ -56,8 +56,7 @@ ui <- fluidPage(
                p("• Simran Bhatti"),
                p("• Bella Kwon"),
                p("• Leire Gangoiti")
-               
-               
+              
              )
     ),
     
