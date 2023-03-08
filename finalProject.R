@@ -32,12 +32,11 @@ ui <- fluidPage(
     ),
     
     # Causes of wildfires tab
-    tabPanel("Causes of wildfires in Oregon",
+    tabPanel("Causes of Wildfires in Oregon",
              sidebarPanel(
                # Sidebar content for Causes of wildfires tab
                h3("Select years to compare:"),
-               sliderInput("year_range", "Year Range", min = 2000, max = 2022, value = c(2015, 2022), step = 1),
-               actionButton("update_btn", "Update")
+               sliderInput("year_range", "Year Range", min = 2000, max = 2022, value = c(2015, 2022), step = 1)
              ),
              mainPanel(
                plotOutput("causes_plot")
@@ -61,11 +60,12 @@ ui <- fluidPage(
     ),
     tabPanel("Conclusion",
              mainPanel("• The main cause of Oregon wildfires is mostly from lightning, however, humans cause half of what lightning causes.",
-               imageOutput("Image2")
+                       imageOutput("Image2")
              )
     )
   )
 )
+
 
 server <- function(input, output){
   
@@ -75,7 +75,7 @@ server <- function(input, output){
   })
   
   # Causes of wildfires plot
-  output$causes_plot <- renderPlot({
+  causes_plot_data <- reactive({
     filtered_data <- causes_data %>% 
       filter(year >= input$year_range[1] & year <= input$year_range[2])
     ggplot(data = filtered_data, aes(x = year, y = count, fill = cause)) + 
@@ -86,6 +86,11 @@ server <- function(input, output){
       scale_fill_manual(values = c("#003f5c", "#ffa600")) # custom fill colors
   })
   
+  output$causes_plot <- renderPlot({
+    causes_plot_data()
+  })
+  
+
   # Image 2 for the conclusion page
   output$Image2 <- renderImage({
     list(src = "image2 .jpg", width = "600", height = "300")
