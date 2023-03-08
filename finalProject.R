@@ -109,8 +109,9 @@ ui <- fluidPage(
              )  
     ), 
     
-    tabPanel("Conclusion",
+   tabPanel("Conclusion",
              mainPanel(
+               imageOutput("Image2"),
                h2(strong("Discoveries")),
                p("Based on the plots and tables that we have computed, 
                we can conclude that there is some correlation about wildfires in Oregon."),
@@ -127,7 +128,7 @@ ui <- fluidPage(
                  it doesn't show exactly relationship between the amount of fires and total acres. By the way, 
                  we're going to approximately both South Cascade and Southwest Oregon districts are the most burned 
                  by the Wildfire."),
-               p("For the last plot, we selected the variables ; the number of wildfires and years 
+              p("For the last plot, we selected the variables ; the number of wildfires and years 
                  to forecast the overall trend over the decade. We set 2000 year to 2010 year as the
                  early year(s) and then to 2022 year as the later year(s). Although there are potential
                  content to lead data bias in decade such as climate change or social growth, the dataset 
